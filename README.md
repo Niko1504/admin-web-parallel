@@ -1,73 +1,200 @@
-# React + TypeScript + Vite
+# 🚿 Washio Admin Dashboard — Parallel Development Version
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a **parallel development clone** of the Washio admin dashboard originally built by WebMedia. It's designed for **independent development and testing** while the original version remains unchanged.
 
-Currently, two official plugins are available:
+## 🎯 Purpose
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Parallel Development**: Work on admin features independently from WebMedia's version
+- **Real-time Data Sync**: Both admin dashboards connect to the **same backend** and **same MongoDB**
+- **A/B Testing**: Compare approaches and development speed between this version and the original
+- **Zero Coupling**: Changes here don't affect the original WebMedia repo
 
-## React Compiler
+## 🏗️ Architecture
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+┌────────────────────┐
+│   Mobile App       │
+│   (Expo/RN)        │
+└─────────┬──────────┘
+          │ (API calls)
+          ↓
+┌────────────────────┐
+│  FastAPI Backend   │
+│  MongoDB ←────┐    │
+└────────────────────┘
+               │
+         ┌─────┴─────┐
+         ↓           ↓
+    ┌─────────┐  ┌─────────┐
+    │ Admin   │  │ Admin   │
+    │ v1      │  │ v2      │
+    │WebMedia │  │JARVIS   │
+    └─────────┘  └─────────┘
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**Both admins** read/write to the **same MongoDB**:
+- Admin v1 (WebMedia): `https://washio-admin.vercel.app`
+- Admin v2 (JARVIS): `https://washio-admin-parallel.vercel.app`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+When a mobile app user creates an order → **both admins see it immediately**.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Quick Start
+
+### Local Development
+```bash
+npm install
+npm run dev
 ```
+
+Visit: `http://localhost:5173`
+
+Environment: Uses `http://localhost:8000` backend (local dev)
+
+### Production Deployment
+
+#### On Vercel
+```bash
+# Option 1: Via CLI
+npm install -g vercel
+vercel deploy --prod
+
+# Option 2: Via Vercel Dashboard
+# 1. Push to GitHub
+# 2. Go to https://vercel.com/new
+# 3. Import this repo
+# 4. Set env var: VITE_API_URL=https://api.washio.com
+# 5. Deploy
+```
+
+#### Environment Variables
+
+For production Vercel deployment, set:
+```
+VITE_API_URL=https://api.washio.com
+```
+
+For local dev, edit `.env.local`:
+```
+VITE_API_URL=http://localhost:8000
+```
+
+## 📊 Features
+
+- **Orders Management**
+  - List all orders with real-time status
+  - View order details (photos, customer info, courier assignment)
+  - Change order status
+  - Assign courier
+  - Upload payment link
+  - Edit order details (location, price, car info)
+  - Cancel orders
+  - Archive completed orders
+
+- **Courier Management**
+  - List all couriers
+  - Create new courier
+  - Edit courier details
+  - Deactivate couriers
+
+- **Settings**
+  - View/update service price
+  - Language toggle (RU/KA)
+
+- **Admin Management**
+  - Create/edit/delete admin accounts
+  - Manage user access
+
+- **Multi-language Support**
+  - Russian (RU)
+  - Georgian (KA)
+
+## 🔄 Real-Time Sync Testing
+
+1. **Login to both admins** simultaneously
+2. **Create an order** in the mobile app
+3. **Refresh both admin dashboards** → same order appears in both
+4. **Change status in Admin v1** → order reflects change
+5. **Check Admin v2** → status updated (may need refresh)
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React 19 + Vite + TypeScript
+- **UI**: Tailwind CSS + Lucide Icons
+- **API Client**: Axios
+- **Routing**: React Router DOM v7
+- **Date**: date-fns
+
+## 📁 Project Structure
+
+```
+├── src/
+│   ├── api/           # API client (connects to backend)
+│   ├── pages/         # Main pages (Login, Dashboard, Orders, etc)
+│   ├── components/    # Reusable components
+│   ├── context/       # Auth context
+│   ├── i18n/          # Translations (RU/KA)
+│   ├── constants/     # Constants (order statuses)
+│   ├── utils/         # Utility functions
+│   └── App.tsx        # Main app component
+├── public/            # Static assets
+├── dist/              # Build output (Vercel deploys this)
+├── vercel.json        # Vercel deployment config
+└── package.json       # Dependencies
+```
+
+## 🔐 Authentication
+
+- **Login**: Username + Password (admin account)
+- **Session**: JWT token stored in localStorage
+- **Auto-refresh**: Token refreshes on 401 response
+
+### Test Admin Credentials
+```
+Username: admin
+Password: admin123
+```
+
+## ⚠️ Important Notes
+
+### Differences from Original
+- Simplified TypeScript config (no composite)
+- Environment variables for API URL
+- Vercel deployment ready
+- Independent Git history
+
+### Data Consistency
+Both admin versions are **100% read/write synchronized** with the backend:
+- Same MongoDB database
+- Same FastAPI backend
+- Real-time sync (may need page refresh for immediate updates)
+
+### Not Modified in Original
+The source code in `washio-mobile-app/admin-web` remains **untouched**. This is a clean clone for parallel development.
+
+## 📝 Deployment Checklist
+
+- [ ] GitHub repo created
+- [ ] Vercel project created
+- [ ] Environment variable `VITE_API_URL` set to production backend
+- [ ] Both admins tested with real mobile app orders
+- [ ] Status/courier changes sync between admins
+- [ ] Auto-refresh every 10 seconds working
+
+## 🤝 Development Workflow
+
+1. Create feature branches for new features
+2. Test with real mobile app data
+3. Compare implementation with WebMedia version
+4. Deploy to Vercel when ready
+5. Monitor real-time sync with original admin
+
+## 📞 Support
+
+For questions about this parallel version, refer to:
+- `DEPLOYMENT.md` — Detailed deployment guide
+- Original repo: `washio-mobile-app/admin-web`
+- Backend API docs: `https://api.washio.com/docs` (if available)
+
+---
+
+**Built for independent, parallel development of the Washio admin dashboard.**
