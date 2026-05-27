@@ -157,7 +157,7 @@ export default function Orders() {
     setPaymentLink('');
   };
 
-  const handleSortClick = (field: 'created_at' | 'scheduled_time') => {
+  const handleSortClick = (field: 'status' | 'created_at' | 'scheduled_time') => {
     setSortMode(field);
   };
 
@@ -245,7 +245,19 @@ export default function Orders() {
                 </span>
               </th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.courier}</th>
-              <th className="text-left px-6 py-4 text-sm font-medium text-gray-500 w-[180px]">{t.currentStatus}</th>
+              <th
+                className={`text-left px-6 py-4 text-sm font-medium cursor-pointer select-none transition-colors w-[180px]
+                  ${sortMode === 'status'
+                    ? 'font-semibold text-gray-900'
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  }`}
+                onClick={() => handleSortClick('status')}
+              >
+                <span className="flex items-center gap-1">
+                  {t.currentStatus}
+                  {sortMode === 'status' && <ChevronDown className="w-4 h-4" />}
+                </span>
+              </th>
               <th className="text-right px-6 py-4 text-sm font-medium text-gray-500">{t.actions}</th>
             </tr>
           </thead>
