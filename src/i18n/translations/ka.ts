@@ -81,6 +81,7 @@ export const ka = {
   time: 'დრო',
   timestamps: 'დრო',
   createdAt: 'შექმნილი',
+  createdAtColumn: 'შექმნის დრო',
   updatedAt: 'განახლებული',
   payment: 'გადახდა',
   paymentPending: 'გადახდის მოლოდინში',

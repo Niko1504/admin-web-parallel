@@ -27,7 +27,7 @@ export const ru = {
   password: 'Пароль',
   loginButton: 'Войти',
   loginError: 'Неверные данные',
-  adminPanel: 'Админ-панель 2.0',
+  adminPanel: 'Админ-панель 2.1',
   
   // Navigation
   dashboard: 'Главная',
@@ -81,6 +81,7 @@ export const ru = {
   time: 'Время',
   timestamps: 'Время',
   createdAt: 'Создан',
+  createdAtColumn: 'Время создания',
   updatedAt: 'Обновлен',
   payment: 'Оплата',
   paymentPending: 'Ожидает оплаты',

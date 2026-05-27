@@ -200,6 +200,7 @@ export default function Orders() {
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">ID</th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.client}</th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.address}</th>
+              <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.createdAtColumn}</th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.time}</th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.courier}</th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500 w-[180px]">{t.currentStatus}</th>
@@ -219,6 +220,9 @@ export default function Orders() {
                   </td>
                   <td className="px-6 py-4 text-gray-900">{order.client_phone}</td>
                   <td className="px-6 py-4 text-gray-500 max-w-[200px] truncate">{order.location}</td>
+                  <td className="px-6 py-4 text-gray-500">
+                    {formatGeorgiaTime(order.created_at, format, 'dd MMM, HH:mm', { locale: dateLocale })}
+                  </td>
                   <td className="px-6 py-4 text-gray-500">
                     {formatGeorgiaTime(order.scheduled_time, format, 'dd MMM, HH:mm', { locale: dateLocale })}
                   </td>
