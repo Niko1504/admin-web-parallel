@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { getAllOrders, getAllCouriers, assignCourier, updateOrderStatus, updatePaymentLink } from '../api/client';
 import { AnimatedButton } from '../components/AnimatedButton';
 import { Toast, useToast } from '../components/Toast';
-import { ORDER_STATUSES, STATUS_FLOW, sortOrdersByStatusPriority, ADMIN_CHANGEABLE_STATUSES } from '../constants/orderStatus';
+import { ORDER_STATUSES, STATUS_FLOW, STATUS_PRIORITY, ADMIN_CHANGEABLE_STATUSES } from '../constants/orderStatus';
 import { useLanguage, getStatusTranslation } from '../i18n/LanguageContext';
 import { format } from 'date-fns';
 import { ru, ka } from 'date-fns/locale';
-import { Search, Filter, RefreshCw, UserPlus, ArrowRightLeft, CreditCard, X, ExternalLink } from 'lucide-react';
+import { Search, Filter, RefreshCw, UserPlus, ArrowRightLeft, CreditCard, X, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
 import { formatGeorgiaTime } from '../utils/timezone';
 
 // Auto-refresh interval - 10 seconds
@@ -22,6 +22,8 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [sortBy, setSortBy] = useState<'created_at' | 'scheduled_time' | 'none'>('created_at');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   
   // Toast notification
@@ -69,20 +71,29 @@ export default function Orders() {
     };
   }, []);
 
-  const filteredOrders = sortOrdersByStatusPriority(
-    orders.filter(order => {
-      if (filter !== 'all' && order.status !== filter) return false;
-      if (search) {
-        const searchLower = search.toLowerCase();
-        return (
-          order.id.toLowerCase().includes(searchLower) ||
-          order.client_phone.includes(search) ||
-          order.location.toLowerCase().includes(searchLower)
-        );
-      }
-      return true;
-    })
-  );
+  const filteredOrders = [...orders.filter(order => {
+    if (filter !== 'all' && order.status !== filter) return false;
+    if (search) {
+      const searchLower = search.toLowerCase();
+      return (
+        order.id.toLowerCase().includes(searchLower) ||
+        order.client_phone.includes(search) ||
+        order.location.toLowerCase().includes(searchLower)
+      );
+    }
+    return true;
+  })].sort((a, b) => {
+    // Primary: STATUS_PRIORITY (always)
+    const priorityA = STATUS_PRIORITY[a.status] ?? 999;
+    const priorityB = STATUS_PRIORITY[b.status] ?? 999;
+    if (priorityA !== priorityB) return priorityA - priorityB;
+
+    // Secondary: user-selected field
+    if (sortBy === 'none') return 0;
+    const dateA = new Date(a[sortBy] ?? 0).getTime();
+    const dateB = new Date(b[sortBy] ?? 0).getTime();
+    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+  });
 
   const handleAssignCourier = async (courierId: string) => {
     if (!selectedOrder) return;
@@ -141,6 +152,15 @@ export default function Orders() {
     setSelectedOrder(null);
     setModalType(null);
     setPaymentLink('');
+  };
+
+  const handleSortClick = (field: 'created_at' | 'scheduled_time') => {
+    if (sortBy === field) {
+      setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc');
+    } else {
+      setSortBy(field);
+      setSortOrder('desc');
+    }
   };
 
   return (
