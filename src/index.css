@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Animated Button Shimmer Effect */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.btn-shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+  pointer-events: none;
+}
+
+.btn-shimmer:disabled::before {
+  animation: none;
+}
+
+/* Animated Logo Styles */
+.animated-logo-container {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.animated-logo-container:hover {
+  transform: scale(1.05) translateY(-2px);
+}
+
+.animated-logo-container.pressed {
+  transform: scale(0.95);
+}
+
+.animated-logo-container .logo-glow {
+  position: absolute;
+  inset: -4px;
+  background: #3B82F6;
+  border-radius: 18px;
+  opacity: 0.3;
+  filter: blur(12px);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+
+.animated-logo-container .logo-image {
+  position: relative;
+  border-radius: 16px;
+  z-index: 1;
+}
+
+.animated-logo-container .shimmer-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.animated-logo-container .shimmer-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 25%,
+    rgba(135, 206, 250, 0.25) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 100%
+  );
+  animation: logo-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes logo-shimmer {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+.animated-logo-container .sparkle {
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  z-index: 3;
+  opacity: 0;
+  text-shadow: 0 0 4px rgba(135, 206, 250, 0.8);
+}
+
+.animated-logo-container .sparkle-1 {
+  top: 15%;
+  left: 20%;
+  animation: sparkle-anim 2.7s ease-in-out infinite 0s;
+}
+
+.animated-logo-container .sparkle-2 {
+  top: 35%;
+  right: 15%;
+  font-size: 10px;
+  color: #87CEFA;
+  animation: sparkle-anim 2.7s ease-in-out infinite 0.9s;
+}
+
+.animated-logo-container .sparkle-3 {
+  bottom: 25%;
+  right: 25%;
+  font-size: 8px;
+  animation: sparkle-anim 2.7s ease-in-out infinite 1.8s;
+}
+
+@keyframes sparkle-anim {
+  0%, 55%, 100% { opacity: 0; transform: scale(0.5); }
+  20% { opacity: 1; transform: scale(1.2); }
+  45% { opacity: 0; transform: scale(0.5); }
+}
+
+.animated-logo-container .ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(135, 206, 250, 0.5);
+  background: rgba(135, 206, 250, 0.2);
+  animation: ripple-anim 0.6s ease-out forwards;
+  z-index: 0;
+}
+
+@keyframes ripple-anim {
+  0% { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+
+/* Toast animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
