@@ -27,7 +27,7 @@ export const ru = {
   password: 'Пароль',
   loginButton: 'Войти',
   loginError: 'Неверные данные',
-  adminPanel: 'Админ-панель 2.2',
+  adminPanel: 'Админ-панель 2.3',
   
   // Navigation
   dashboard: 'Главная',

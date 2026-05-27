@@ -7,7 +7,7 @@ import { ORDER_STATUSES, STATUS_FLOW, STATUS_PRIORITY, ADMIN_CHANGEABLE_STATUSES
 import { useLanguage, getStatusTranslation } from '../i18n/LanguageContext';
 import { format } from 'date-fns';
 import { ru, ka } from 'date-fns/locale';
-import { Search, Filter, RefreshCw, UserPlus, ArrowRightLeft, CreditCard, X, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { Search, Filter, RefreshCw, UserPlus, ArrowRightLeft, CreditCard, X, ExternalLink, ChevronDown } from 'lucide-react';
 import { formatGeorgiaTime } from '../utils/timezone';
 
 // Auto-refresh interval - 10 seconds
@@ -22,8 +22,7 @@ export default function Orders() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
-  const [sortBy, setSortBy] = useState<'created_at' | 'scheduled_time' | 'none'>('created_at');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [sortMode, setSortMode] = useState<'status' | 'created_at' | 'scheduled_time'>('status');
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   
   // Toast notification
@@ -83,16 +82,20 @@ export default function Orders() {
     }
     return true;
   })].sort((a, b) => {
-    // Primary: STATUS_PRIORITY (always)
-    const priorityA = STATUS_PRIORITY[a.status] ?? 999;
-    const priorityB = STATUS_PRIORITY[b.status] ?? 999;
-    if (priorityA !== priorityB) return priorityA - priorityB;
-
-    // Secondary: user-selected field
-    if (sortBy === 'none') return 0;
-    const dateA = new Date(a[sortBy] ?? 0).getTime();
-    const dateB = new Date(b[sortBy] ?? 0).getTime();
-    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+    if (sortMode === 'status') {
+      const priorityA = STATUS_PRIORITY[a.status] ?? 999;
+      const priorityB = STATUS_PRIORITY[b.status] ?? 999;
+      return priorityA - priorityB;
+    }
+    if (sortMode === 'created_at') {
+      const dateA = new Date(a.created_at ?? 0).getTime();
+      const dateB = new Date(b.created_at ?? 0).getTime();
+      return dateB - dateA;
+    }
+    // sortMode === 'scheduled_time'
+    const dateA = new Date(a.scheduled_time ?? 0).getTime();
+    const dateB = new Date(b.scheduled_time ?? 0).getTime();
+    return dateB - dateA;
   });
 
   const handleAssignCourier = async (courierId: string) => {
@@ -155,12 +158,7 @@ export default function Orders() {
   };
 
   const handleSortClick = (field: 'created_at' | 'scheduled_time') => {
-    if (sortBy === field) {
-      setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc');
-    } else {
-      setSortBy(field);
-      setSortOrder('desc');
-    }
+    setSortMode(field);
   };
 
   return (
@@ -222,7 +220,7 @@ export default function Orders() {
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.address}</th>
               <th
                 className={`text-left px-6 py-4 text-sm font-medium cursor-pointer select-none transition-colors
-                  ${sortBy === 'created_at'
+                  ${sortMode === 'created_at'
                     ? 'font-semibold text-gray-900'
                     : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
                   }`}
@@ -230,16 +228,12 @@ export default function Orders() {
               >
                 <span className="flex items-center gap-1">
                   {t.createdAtColumn}
-                  {sortBy === 'created_at' && (
-                    sortOrder === 'desc'
-                      ? <ChevronDown className="w-4 h-4" />
-                      : <ChevronUp className="w-4 h-4" />
-                  )}
+                  {sortMode === 'created_at' && <ChevronDown className="w-4 h-4" />}
                 </span>
               </th>
               <th
                 className={`text-left px-6 py-4 text-sm font-medium cursor-pointer select-none transition-colors
-                  ${sortBy === 'scheduled_time'
+                  ${sortMode === 'scheduled_time'
                     ? 'font-semibold text-gray-900'
                     : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
                   }`}
@@ -247,11 +241,7 @@ export default function Orders() {
               >
                 <span className="flex items-center gap-1">
                   {t.time}
-                  {sortBy === 'scheduled_time' && (
-                    sortOrder === 'desc'
-                      ? <ChevronDown className="w-4 h-4" />
-                      : <ChevronUp className="w-4 h-4" />
-                  )}
+                  {sortMode === 'scheduled_time' && <ChevronDown className="w-4 h-4" />}
                 </span>
               </th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.courier}</th>
