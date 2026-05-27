@@ -220,8 +220,40 @@ export default function Orders() {
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">ID</th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.client}</th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.address}</th>
-              <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.createdAtColumn}</th>
-              <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.time}</th>
+              <th
+                className={`text-left px-6 py-4 text-sm font-medium cursor-pointer select-none transition-colors
+                  ${sortBy === 'created_at'
+                    ? 'font-semibold text-gray-900'
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  }`}
+                onClick={() => handleSortClick('created_at')}
+              >
+                <span className="flex items-center gap-1">
+                  {t.createdAtColumn}
+                  {sortBy === 'created_at' && (
+                    sortOrder === 'desc'
+                      ? <ChevronDown className="w-4 h-4" />
+                      : <ChevronUp className="w-4 h-4" />
+                  )}
+                </span>
+              </th>
+              <th
+                className={`text-left px-6 py-4 text-sm font-medium cursor-pointer select-none transition-colors
+                  ${sortBy === 'scheduled_time'
+                    ? 'font-semibold text-gray-900'
+                    : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                  }`}
+                onClick={() => handleSortClick('scheduled_time')}
+              >
+                <span className="flex items-center gap-1">
+                  {t.time}
+                  {sortBy === 'scheduled_time' && (
+                    sortOrder === 'desc'
+                      ? <ChevronDown className="w-4 h-4" />
+                      : <ChevronUp className="w-4 h-4" />
+                  )}
+                </span>
+              </th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500">{t.courier}</th>
               <th className="text-left px-6 py-4 text-sm font-medium text-gray-500 w-[180px]">{t.currentStatus}</th>
               <th className="text-right px-6 py-4 text-sm font-medium text-gray-500">{t.actions}</th>
