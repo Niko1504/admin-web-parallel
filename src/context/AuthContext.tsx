@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -11,41 +11,38 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminId, setAdminId] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
-
-  useEffect(() => {
+  const [authState, setAuthState] = useState(() => {
     const stored = localStorage.getItem('admin_auth');
-    if (stored) {
-      const data = JSON.parse(stored);
-      setIsAuthenticated(true);
-      setAdminId(data.adminId);
-      setUsername(data.username);
+    if (!stored) {
+      return { isAuthenticated: false, adminId: null, username: null };
     }
-  }, []);
+
+    const data = JSON.parse(stored);
+    return {
+      isAuthenticated: true,
+      adminId: data.adminId,
+      username: data.username,
+    };
+  });
 
   const login = (adminId: string, username: string) => {
     localStorage.setItem('admin_auth', JSON.stringify({ adminId, username }));
-    setIsAuthenticated(true);
-    setAdminId(adminId);
-    setUsername(username);
+    setAuthState({ isAuthenticated: true, adminId, username });
   };
 
   const logout = () => {
     localStorage.removeItem('admin_auth');
-    setIsAuthenticated(false);
-    setAdminId(null);
-    setUsername(null);
+    setAuthState({ isAuthenticated: false, adminId: null, username: null });
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, adminId, username, login, logout }}>
+    <AuthContext.Provider value={{ ...authState, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within AuthProvider');
