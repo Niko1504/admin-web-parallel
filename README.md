@@ -80,6 +80,12 @@ VITE_API_URL=http://localhost:8000
 
 ## 📊 Features
 
+- **Users** (customer lifecycle visibility)
+  - View customer activity derived from the admin orders feed
+  - Search users by phone number
+  - See approximate registration date, last order, order count, total spend, cars seen in orders, and deleted-account flags
+  - See the limitation below: registered users with no orders are not shown because the backend does not expose an admin user-list endpoint
+
 - **Orders Management**
   - List all orders with real-time status
   - View order details (photos, customer info, courier assignment)
@@ -123,6 +129,14 @@ VITE_API_URL=http://localhost:8000
 - **API Client**: Axios
 - **Routing**: React Router DOM v7
 - **Date**: date-fns
+- **Tests**: Vitest
+
+## ✅ Verification
+
+```bash
+npm test
+npm run build
+```
 
 ## 📁 Project Structure
 
@@ -169,7 +183,16 @@ Both admin versions are **100% read/write synchronized** with the backend:
 - Real-time sync (may need page refresh for immediate updates)
 
 ### Not Modified in Original
-The source code in `washio-mobile-app/admin-web` remains **untouched**. This is a clean clone for parallel development.
+The source code in `washio-mobile-app/admin-web` remains **untouched**. This is a clean clone for parallel development. The shared FastAPI backend (`washio-mobile-app/backend`) was **not modified** either — the Users section is built entirely from the existing `GET /orders` response.
+
+### Users section — known limitations (by design)
+The backend exposes **no admin endpoint** that lists customer accounts (`db.users`). The Users page is therefore reconstructed by aggregating the orders feed, which means:
+- **Registered-but-never-ordered users are invisible.** A user who completed OTP registration but never placed an order leaves no trace in the orders feed.
+- **Registration date is approximate** — it shows the customer's *first order* time, not the true `created_at` on the (unexposed) user document.
+- **Cars are derived from orders**, not from the user's saved garage (`db.cars`, also unexposed).
+- **Deleted accounts** are detected via the `user_deleted` flag the backend stamps on a user's orders during account deletion. A deleted user with zero orders leaves no trace at all.
+
+Removing these limitations would require a new backend admin endpoint (e.g. `GET /admin/users`), which is intentionally **out of scope** here to avoid modifying the shared backend.
 
 ## 📝 Deployment Checklist
 

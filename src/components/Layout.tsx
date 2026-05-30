@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../i18n/LanguageContext';
-import { LayoutDashboard, ClipboardList, Users, LogOut, Settings, CheckCircle } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Users, UserRound, LogOut, Settings, CheckCircle } from 'lucide-react';
 import { AnimatedWashioLogo } from './AnimatedWashioLogo';
 import { LanguageSelectorCompact } from './LanguageSelector';
 import washioTextImg from '/washio-text.png';
@@ -22,6 +22,7 @@ export default function Layout() {
     { to: '/orders', icon: ClipboardList, label: t.orders },
     { to: '/completed', icon: CheckCircle, label: t.completedOrders },
     { to: '/couriers', icon: Users, label: t.couriers },
+    { to: '/users', icon: UserRound, label: t.users },
     { to: '/settings', icon: Settings, label: t.settings },
   ];
 

@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import OrderDetail from './pages/OrderDetail';
 import Couriers from './pages/Couriers';
+import Users from './pages/Users';
 import Settings from './pages/Settings';
 import CompletedOrders from './pages/CompletedOrders';
 import Layout from './components/Layout';
@@ -29,6 +30,7 @@ export default function App() {
         <Route path="orders/:id" element={<OrderDetail />} />
         <Route path="completed" element={<CompletedOrders />} />
         <Route path="couriers" element={<Couriers />} />
+        <Route path="users" element={<Users />} />
         <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>

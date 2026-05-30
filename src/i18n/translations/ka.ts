@@ -27,7 +27,7 @@ export const ka = {
   password: 'პაროლი',
   loginButton: 'შესვლა',
   loginError: 'არასწორი მონაცემები',
-  adminPanel: 'ადმინ-პანელი',
+  adminPanel: 'ადმინ-პანელი 2.5',
   
   // Navigation
   dashboard: 'მთავარი',
@@ -233,4 +233,21 @@ export const ka = {
   enterPassword: 'შეიყვანეთ პაროლი',
   passwordTooShort: 'პაროლი უნდა იყოს მინიმუმ 6 სიმბოლო',
   fillAllFields: 'შეავსეთ ყველა ველი',
+
+  // Users
+  users: 'მომხმარებლები',
+  usersTitle: 'მომხმარებლები',
+  usersSubtitle: 'კლიენტები და მათი აქტივობა',
+  usersSearchPlaceholder: 'ძებნა ტელეფონით...',
+  userRegistered: 'რეგისტრაცია (≈)',
+  userCars: 'ავტომობილები',
+  userOrdersCount: 'შეკვეთები',
+  userLastOrder: 'ბოლო შეკვეთა',
+  userTotalSpent: 'შეკვეთების ჯამი',
+  userStatusActive: 'აქტიური',
+  userStatusDeleted: 'ანგარიში წაშლილია',
+  noUsersFound: 'მომხმარებლები ვერ მოიძებნა',
+  usersLoadError: 'მომხმარებლების ჩატვირთვა ვერ მოხერხდა',
+  usersDerivedNote:
+    'სია აგებულია შეკვეთების მიხედვით. მომხმარებლები, რომლებმაც გაიარეს რეგისტრაცია, მაგრამ არ გაუკეთებიათ შეკვეთა, აქ არ ჩანან — ბექენდი არ იძლევა ანგარიშების სიის ადმინ-წვდომას. რეგისტრაციის თარიღი ნაჩვენებია მიახლოებით (პირველი შეკვეთის მიხედვით).',
 };

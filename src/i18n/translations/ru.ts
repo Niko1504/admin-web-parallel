@@ -27,7 +27,7 @@ export const ru = {
   password: 'Пароль',
   loginButton: 'Войти',
   loginError: 'Неверные данные',
-  adminPanel: 'Админ-панель 2.4',
+  adminPanel: 'Админ-панель 2.5',
   
   // Navigation
   dashboard: 'Главная',
@@ -233,4 +233,21 @@ export const ru = {
   enterPassword: 'Введите пароль',
   passwordTooShort: 'Пароль должен быть минимум 6 символов',
   fillAllFields: 'Заполните все поля',
+
+  // Users
+  users: 'Пользователи',
+  usersTitle: 'Пользователи',
+  usersSubtitle: 'Клиенты и их активность',
+  usersSearchPlaceholder: 'Поиск по телефону...',
+  userRegistered: 'Регистрация (≈)',
+  userCars: 'Автомобили',
+  userOrdersCount: 'Заказов',
+  userLastOrder: 'Последний заказ',
+  userTotalSpent: 'Сумма заказов',
+  userStatusActive: 'Активен',
+  userStatusDeleted: 'Аккаунт удалён',
+  noUsersFound: 'Пользователи не найдены',
+  usersLoadError: 'Не удалось загрузить пользователей',
+  usersDerivedNote:
+    'Список построен на основе заказов. Пользователи, прошедшие регистрацию, но не сделавшие ни одного заказа, здесь не отображаются — бэкенд не предоставляет админ-доступ к списку аккаунтов. Дата регистрации показана приблизительно (по первому заказу).',
 };
