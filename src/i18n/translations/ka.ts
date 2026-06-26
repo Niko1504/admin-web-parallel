@@ -27,7 +27,7 @@ export const ka = {
   password: 'პაროლი',
   loginButton: 'შესვლა',
   loginError: 'არასწორი მონაცემები',
-  adminPanel: 'ადმინ-პანელი 2.5',
+  adminPanel: 'ადმინ-პანელი 2.6',
   
   // Navigation
   dashboard: 'მთავარი',
